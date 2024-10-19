@@ -3,21 +3,22 @@ use std::path::Path;
 use std::process::{Command, Stdio};
 use std::io::{BufRead, BufReader, BufWriter, Write};
 use std::fs::File;
-use std::fs;
 use std::env;
 
 fn main() {
 
+    let home_dir = env::home_dir().expect("err: <$HOME_DIR> undefined").display().to_string();
     let mut git_password = String::new();
 
-    let mut file = File::open(".fhub").expect("err: cant find file [.fhub] with PAT key");
+    println!("{home_dir}");
+
+    let file = File::open([home_dir.as_str(), "/.fhub"].join("")).expect("err: cant find file [.fhub] with PAT key");
     let mut buf_reader = BufReader::new(file);
     buf_reader.read_line(&mut git_password).expect("err: cant read PAT key");
 
     let binding = env::current_dir().unwrap();
     let curr_dir = binding.to_str().unwrap();
 
-    let home_dir = env::home_dir().expect("err: <$HOME_DIR> undefined").display().to_string();
 
     let git_pass_file_path = [home_dir.as_str(), "/.git_password.sh"].join("");
 
